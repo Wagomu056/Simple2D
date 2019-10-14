@@ -23,6 +23,9 @@ ExportedObj/
 *.svd
 *.pdb
 
+# Assets
+/Assets/Sunnyland/
+
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -60,3 +63,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.meta
