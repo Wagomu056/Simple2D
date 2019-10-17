@@ -17,7 +17,7 @@ public class Move : State
     public override void Update()
     {
         float direction = (GetHorizontal() > 0.0f) ? 1.0f : -1.0f;
-        float speed = 5.0f;
+        float speed = 4.0f;
         
         rigid.velocity = new Vector2((speed * direction), rigid.velocity.y);
     }

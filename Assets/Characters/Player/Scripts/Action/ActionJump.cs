@@ -9,8 +9,8 @@ public class Jump : State
 
     float velX = 0.0f;
 
-    const float MaxVelX = 5.0f;
-    const float AddVelX = (MaxVelX / 0.2f);
+    const float MaxVelX = 3.0f;
+    const float AddVelX = (MaxVelX / 0.01f);
 
     public Jump(Animator animator, UInput.InputComponet input, Rigidbody2D rigid)
     : base(animator, input, rigid)
@@ -20,7 +20,7 @@ public class Jump : State
     
     public override void Start()
     {
-        rigid.velocity += new Vector2(0.0f, 5.0f);
+        rigid.velocity += new Vector2(0.0f, 10.0f);
         velX = rigid.velocity.x;
         status.Set(StatusWithAnimFlag.Type.Jumping);
     }
@@ -56,11 +56,6 @@ public class Jump : State
 
     void UpdateRigid()
     {
-        if (status.Current != StatusWithAnimFlag.Type.Falling)
-        {
-            return;
-        }
-
         velX += AddVelX * input.GetHorizontal() * Time.deltaTime;
         velX = Mathf.Clamp(velX, -MaxVelX, MaxVelX);
         rigid.velocity = new Vector2(velX, rigid.velocity.y);
