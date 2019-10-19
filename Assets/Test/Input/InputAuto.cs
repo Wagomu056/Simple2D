@@ -22,7 +22,7 @@ public class InputAuto : InputComponet
 
     public override float GetHorizontal()
     {
-        if (Time.time < requestHorizontalTimeLimit)
+        if (Time.time <= requestHorizontalTimeLimit)
         {
             return requestHorizontalDir;
         }
