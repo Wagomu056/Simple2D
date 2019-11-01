@@ -48,9 +48,9 @@ namespace Tests
             var playerTransform = player.gameObject.transform;
 
             // 着地するまで少し待つ
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
 
-            var startPosY = playerTransform.position.y;
+            var startPosY = playerTransform.position.y; 
 
             input.RequestJump(0.1f);
             
@@ -68,10 +68,106 @@ namespace Tests
 
             // 着地できたか
             movedPosY = playerTransform.position.y;
-            var diff = Mathf.Abs(movedPosY - startPosY);
-            Debug.Log("start:" + startPosY + " moved:" + movedPosY + " diff:" + diff);
-            Assert.AreEqual(true, (diff <= 0.001f));
+            CheckNotMove(startPosY, movedPosY);
+
+            // ジャンプモーションが終了してアイドルに戻っているか
             Assert.AreEqual(true, player.CheckAnimatorStateName("idle"));
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JumpMoveRight()
+        {
+            const float dir = 1.0f;
+
+            Character.Player player = null;
+            UInput.InputAuto input = null;
+            SetupPlayer(ref player, ref input);
+
+            var playerTransform = player.gameObject.transform;
+
+            // 着地するまで少し待つ
+            yield return new WaitForSeconds(0.1f);
+
+            var startPosX = playerTransform.position.x;
+
+            input.RequestJump(0.1f);
+            yield return new WaitForSeconds(0.1f);
+
+            input.RequestHorizontal(dir, 0.5f);
+            yield return new WaitForSeconds(0.5f);
+
+            var movedPosX = playerTransform.position.x;
+            var diff = movedPosX - startPosX;
+            Debug.Log("start:" + startPosX + " moved:" + movedPosX + " diff:" + diff);
+
+            const float checkDistance = 1.0f;
+            Assert.AreEqual(true, (diff >= checkDistance * dir));
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JumpMoveLeft()
+        {
+            const float dir = -1.0f;
+
+            Character.Player player = null;
+            UInput.InputAuto input = null;
+            SetupPlayer(ref player, ref input);
+
+            var playerTransform = player.gameObject.transform;
+
+            // 着地するまで少し待つ
+            yield return new WaitForSeconds(0.1f);
+
+            var startPosX = playerTransform.position.x;
+
+            input.RequestJump(0.1f);
+            yield return new WaitForSeconds(0.1f);
+
+            input.RequestHorizontal(dir, 0.5f);
+            yield return new WaitForSeconds(0.5f);
+
+            var movedPosX = playerTransform.position.x;
+            var diff = movedPosX - startPosX;
+            Debug.Log("start:" + startPosX + " moved:" + movedPosX + " diff:" + diff);
+
+            const float checkDistance = 1.0f;
+            Assert.AreEqual(true, (diff <= checkDistance * dir));
+
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JumpHitWallAndSlide()
+        {
+            Character.Player player = null;
+            UInput.InputAuto input = null;
+            SetupPlayer(ref player, ref input);
+            var playerTransform = player.gameObject.transform;
+
+            // 着地するまで少し待つ
+            yield return new WaitForSeconds(0.1f);
+
+            // 壁際までワープ
+            var warpPos = playerTransform.position;
+            warpPos.x = 4.0f; 
+            playerTransform.position = warpPos;
+
+            var startY = playerTransform.position.y;
+
+            input.RequestJump(0.1f);
+            yield return new WaitForSeconds(0.1f);
+
+            input.RequestHorizontal(1.0f, 1.0f);
+            yield return new WaitForSeconds(1.0f);
+
+            var movedY = playerTransform.position.y;
+            CheckNotMove(startY, movedY);
+
+            Assert.AreEqual(true, player.CheckAnimatorStateName("run"));
 
             yield return null;
         }
@@ -89,6 +185,13 @@ namespace Tests
             Assert.IsNotNull(player);
 
             player.SwapInput(input);
+        }
+
+        void CheckNotMove(float start, float moved, float threshold = 0.01f)
+        {
+            var diff = Mathf.Abs(moved - start);
+            Debug.Log("start:" + start + " moved:" + moved + " diff:" + diff);
+            Assert.AreEqual(true, (diff <= threshold));
         }
     }
 }
