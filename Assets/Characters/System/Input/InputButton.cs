@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace UInput
 {
+[Serializable]
 public class InputButton
 {
     public string ButtonName {get; private set;}

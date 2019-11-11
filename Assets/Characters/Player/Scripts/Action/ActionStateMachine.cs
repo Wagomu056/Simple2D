@@ -4,16 +4,18 @@ using UnityEngine;
 
 namespace Action
 {
+[Serializable]
 public class StateMachine
 {
-    Dictionary<int, State> states = new Dictionary<int, State>();
-    int statesCount = 0;
+    List<State> states = new List<State>();
 
     State currentState;
 
-    public void Register(int index, State state)
+    int statesCount = 0;
+
+    public void Register(State state)
     {
-        states.Add(index, state);
+        states.Add(state);
         statesCount = states.Count;
     }
 
@@ -85,9 +87,9 @@ public class StateMachine
 #if TEST
     public void SwapInput(UInput.InputComponet input)
     {
-        foreach (var pair in states)
+        foreach (var state in states)
         {
-            pair.Value.SwapInput(input);
+            state.SwapInput(input);
         }
     }
 #endif //TEST

@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace UInput
 {
+[Serializable]
 public class InputByButton : InputComponet
 {
     InputAxis Horizontal = new InputAxis("Horizontal");

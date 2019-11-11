@@ -98,6 +98,7 @@ public class Jump : State
         return (status.Current == StatusWithAnimFlag.Type.Landing);
     }
 
+    [Serializable]
     class StatusWithAnimFlag
     {
         Animator animator;
@@ -134,6 +135,7 @@ public class Jump : State
         }
     }
 
+    [Serializable]
     class ContactChecker
     {
         public enum Type : int
@@ -170,6 +172,7 @@ public class Jump : State
         }
     }
 
+    [Serializable]
     class FallingChecker
     {
         float y = 0.0f;

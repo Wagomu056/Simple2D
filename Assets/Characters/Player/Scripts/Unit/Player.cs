@@ -2,22 +2,16 @@
 
 namespace Character
 {
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISerializationCallbackReceiver 
 {    
-    [SerializeField]
-    UInput.InputComponet input;
-
     Animator animator;
     Rigidbody2D rigid;
 
-    Action.StateMachine actionFSM;
+    [SerializeField]
+    UInput.InputComponet input;
 
-    enum ActionIndex
-    {
-        Jump,
-        Move,
-        Idle,
-    }
+    [SerializeField,HideInInspector]
+    Action.StateMachine actionFSM;
 
     void Awake()
     {
@@ -25,9 +19,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody2D>();
 
         actionFSM = new Action.StateMachine();
-        actionFSM.Register((int)ActionIndex.Jump, new Action.Jump(animator, input, rigid));
-        actionFSM.Register((int)ActionIndex.Move, new Action.Move(animator, input, rigid));
-        actionFSM.Register((int)ActionIndex.Idle, new Action.Idle(animator, input, rigid));
+        RegisterAction();
     }
 
     void OnEnable()
@@ -44,7 +36,22 @@ public class Player : MonoBehaviour
     {
         actionFSM.Update();
     }
+    
+    public void OnBeforeSerialize()
+    {
+    }
+    
+    public void OnAfterDeserialize()
+    {
+        RegisterAction();
+    }
 
+    void RegisterAction()
+    {
+        actionFSM.Register(new Action.Jump(animator, input, rigid));
+        actionFSM.Register(new Action.Move(animator, input, rigid));
+        actionFSM.Register(new Action.Idle(animator, input, rigid));
+    }
 #if TEST
     public void SwapInput(UInput.InputComponet input)
     {
