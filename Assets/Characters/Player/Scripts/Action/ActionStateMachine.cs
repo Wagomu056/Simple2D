@@ -92,6 +92,11 @@ public class StateMachine
             state.SwapInput(input);
         }
     }
+
+    public State GetCurrentState()
+    {
+        return currentState;
+    }
 #endif //TEST
 }
 } // namespace Action
